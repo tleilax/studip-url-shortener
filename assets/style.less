@@ -1,0 +1,30 @@
+form.default .two-columns {
+    .flex();
+    .flex-direction-row();
+    .flex-wrap(nowrap);
+
+    max-width: 48em;
+
+    > label {
+        .flex-item(1);
+
+        &:first-child {
+            margin-right: 0.5em;
+        }
+    }
+
+    &.two-to-one {
+        margin-top: 0;
+        max-width: none;
+
+        > :first-child {
+            max-width: 66%;
+        }
+        > :last-child {
+            max-width: 33%;
+        }
+        input {
+            max-width: none;
+        }
+    }
+}

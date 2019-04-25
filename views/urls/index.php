@@ -1,7 +1,7 @@
-<?= $this->render_partial('urls/add.php') ?>
-
 <? if ($count === 0): ?>
     <?= MessageBox::info(_('Sie haben noch keine Links gekürzt.')) ?>
+
+    <?= $this->render_partial('urls/add.php') ?>
 <? return; endif; ?>
 
 <table class="default">
@@ -32,7 +32,7 @@
                     <?= htmlReady($url->title) ?>
                 </a>
             </td>
-            <td>
+            <td title="<?= _('Stand') . ':' . strftime('%x %X', $url->updated) ?>">
                 <?= number_format($url->clicks, 0, ',', '.') ?>
             </td>
             <td class="actions">

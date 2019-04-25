@@ -24,7 +24,7 @@ class UrlsController extends StudipController
         $limit  = Config::get()->ENTRIES_PER_PAGE;
         $offset = $page * $limit;
 
-        $this->count = (int) URLShortener\URL::countByUser_id($GLOBALS['user']->id);
+        $this->count = URLShortener\URL::countBySQL('user_id = ?', [$GLOBALS['user']->id]);
         $this->urls  = URLShortener\URL::findBySQL(
             "user_id = ?",
             [$GLOBALS['user']->id],
@@ -37,44 +37,18 @@ class UrlsController extends StudipController
 
     }
 
-    public function used_action($type = 'url')
-    {
-        if (!Request::isXhr()) {
-            throw new MethodNotAllowedException();
-        }
-
-        $result = false;
-        if ($type === 'url') {
-            $url = trim(Request::get('url'));
-            if (URLShortener\URL::findOneByUrl($url)) {
-                $result = true;
-            } else {
-                // Check api
-            }
-        } elseif ($type === 'keyword') {
-            $keyword = trim(Request::get('keyword'));
-            if (URLShortener\URL::findOneByShorturl($keyword)) {
-                $result = true;
-            } else {
-                // Check api
-            }
-        } else throw new Exception('Unknown type');
-
-        $this->render_json($result);
-    }
-
     public function store_action()
     {
         $url = trim(Request::get('url'));
 
         $check = URLShortener\URL::findOneByUrl($url);
         if (!$check) {
-            $result = URLShortener\YourlsAPI::getInstance()->shorten(
-                $url,
-                Request::get('keyword')
-            );
+            try {
+                $result = URLShortener\YourlsAPI::getInstance()->shorten(
+                    $url,
+                    Request::get('keyword')
+                );
 
-            if ($result['statusCode'] === 200 && $result['status'] === 'success') {
                 $model = new URLShortener\URL();
                 $model->user_id  = $GLOBALS['user']->id;
                 $model->url      = $result['url']['url'];
@@ -86,10 +60,10 @@ class UrlsController extends StudipController
                     _('URL wurde zu %s gekürzt'),
                     $model->shorturl
                 )));
-            } else {
+            } catch (Exception $e) {
                 PageLayout::postError(
                     _('URL konnte nicht gekürzt werden'),
-                    [$result['message'] ?: _('Unbekannter Fehler')]
+                    [$e->getMessage() ?: _('Unbekannter Fehler')]
                 );
             }
         } elseif ($check->user_id !== $GLOBALS['user']->id) {

@@ -1,5 +1,5 @@
 <?php
-class URLShortener extends StudIPPlugin implements SystemPlugin
+class URLShortener extends StudIPPlugin implements SystemPlugin, RESTAPIPlugin
 {
     public function __construct()
     {
@@ -11,19 +11,11 @@ class URLShortener extends StudIPPlugin implements SystemPlugin
             return;
         }
 
-        if (!$this->isConfigured() && !$this->userIsRoot()) {
+        if (!self::isConfigured() && !$this->userIsRoot()) {
             return;
-        } elseif ($this->isConfigured()) {
-            URLShortener\YourlsAPI::configureInstance(
-                Config::get()->SHORTENER_ENDPOINT,
-                Config::get()->SHORTENER_SIGNATURE
-                    ? ['signature' => Config::get()->SHORTENER_SIGNATURE]
-                    : [
-                        'username' => Config::get()->SHORTENER_USERNAME,
-                        'password' => Config::get()->SHORTENER_PASSWORD,
-                      ]
-            );
         }
+
+        self::configureAPI();
 
         $navigation = new Navigation(
             _('URL Shortener'),
@@ -46,7 +38,7 @@ class URLShortener extends StudIPPlugin implements SystemPlugin
         Navigation::addItem('/tools/url-shortener', $navigation);
     }
 
-    private function isConfigured()
+    public static function isConfigured()
     {
         return Config::get()->SHORTENER_ENDPOINT
             && (
@@ -56,6 +48,23 @@ class URLShortener extends StudIPPlugin implements SystemPlugin
                     && Config::get()->SHORTENER_PASSWORD
                 )
             );
+    }
+
+    public static function configureAPI()
+    {
+        if (!self::isConfigured()) {
+            return;
+        }
+
+        URLShortener\YourlsAPI::configureInstance(
+            Config::get()->SHORTENER_ENDPOINT,
+            Config::get()->SHORTENER_SIGNATURE
+                ? ['signature' => Config::get()->SHORTENER_SIGNATURE]
+                : [
+                    'username' => Config::get()->SHORTENER_USERNAME,
+                    'password' => Config::get()->SHORTENER_PASSWORD,
+                  ]
+        );
     }
 
     private function userIsLoggedIn()
@@ -72,8 +81,18 @@ class URLShortener extends StudIPPlugin implements SystemPlugin
 
     public function perform($unconsumed)
     {
+        $version = $this->getMetadata()['version'];
+
         $this->addStylesheet('assets/style.less');
+        PageLayout::addScript($this->getPluginURL() . '/assets/script.js?v=' . $version);
 
         parent::perform($unconsumed);
+    }
+
+    public function getRouteMaps()
+    {
+        return [
+            new URLShortener\RouteMap(),
+        ];
     }
 }

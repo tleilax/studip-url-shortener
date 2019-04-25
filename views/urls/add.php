@@ -1,4 +1,4 @@
-<form action="<?= $controller->link_for('urls/store') ?>" method="post" class="default">
+<form action="<?= $controller->link_for('urls/store') ?>" method="post" class="default url-add">
     <fieldset>
         <legend class="hide-in-dialog"><?= _('Link kürzen') ?></legend>
 

@@ -131,7 +131,7 @@ class YourlsAPI
 
         // Check data array
         $errors = [];
-        foreach ($actions[$action] as $var_name => $config) {
+        foreach (self::$actions[$action] as $var_name => $config) {
             if ($config !== false && !isset($data[$var_name])) {
                 $errors[] = "Missing parameter {$var_name}";
             } elseif (is_array($config) && !in_array($data[$var_name], $config)) {
@@ -143,28 +143,57 @@ class YourlsAPI
         }
 
         // Actual request
-        $ch = curl_init();
-        curl_setopt_array($ch, [
-            CURLOPT_URL            => $this->endpoint,
-            CURLOPT_HEADER         => 0,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST           => 1,
-            CURLOPT_POSTFIELDS     => array_merge(
-                compact('action'),
-                $this->credentials,
-                ['format' => $this->format],
-                $data
-            ),
-        ]);
-        $data = curl_exec($ch);
-        curl_close($ch);
+        $this->curl_handle = $this->getCurlHandle();
+        curl_setopt($this->curl_handle, CURLOPT_URL, $this->endpoint);
+        curl_setopt($this->curl_handle, CURLOPT_POSTFIELDS, array_merge(
+            compact('action'),
+            $this->credentials,
+            ['format' => $this->format],
+            $data
+        ));
+        $data = curl_exec($this->curl_handle);
+        $info = curl_getinfo($this->curl_handle);
 
-        return call_user_func(self::$formats[$this->format], $data);
+        if ($info['http_code'] >= 400) {
+            throw new Exception('Request went wrong');
+        }
+
+        $result = call_user_func(self::$formats[$this->format], $data);
+
+        if ($result['statusCode'] >= 400) {
+            throw new Exception($result['message']);
+        }
+
+        return $result;
 
     }
 
     protected static function jsonHandler(string $input)
     {
         return json_decode($input, true);
+    }
+
+    private $curl_handle = null;
+
+    private function getCurlHandle()
+    {
+        if ($this->curl_handle === null) {
+            $this->curl_handle = curl_init();
+            curl_setopt_array($this->curl_handle, [
+                CURLOPT_HEADER         => 0,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST           => 1,
+                CURLOPT_SSL_VERIFYPEER => false,
+            ]);
+
+        }
+        return $this->curl_handle;
+    }
+
+    private function __destruct()
+    {
+        if ($this->curl_handle) {
+            curl_close($this->curl_handle);
+        }
     }
 }

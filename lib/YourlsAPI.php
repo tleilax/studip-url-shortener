@@ -190,7 +190,7 @@ class YourlsAPI
         return $this->curl_handle;
     }
 
-    private function __destruct()
+    public function __destruct()
     {
         if ($this->curl_handle) {
             curl_close($this->curl_handle);

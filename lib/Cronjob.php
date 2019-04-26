@@ -1,7 +1,7 @@
 <?php
 namespace URLShortener;
 
-use Cronjob as GlobalCronjob;
+use CronJob as GlobalCronjob;
 
 class Cronjob extends GlobalCronjob
 {

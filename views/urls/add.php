@@ -1,17 +1,29 @@
-<form action="<?= $controller->link_for('urls/store') ?>" method="post" class="default url-add">
+<form action="<?= $controller->link_for('urls/store') ?>" method="post" class="default url-add" autocomplete="off">
     <fieldset>
         <legend class="hide-in-dialog"><?= _('Link kürzen') ?></legend>
 
-        <div class="two-columns two-to-one">
-            <label>
-                <input required type="url" name="url" placeholder="<?= _('URL') ?>">
-            </label>
+        <label>
+            <?= _('URL, die gekürzt werden soll') ?>
+            <input required type="url" name="url" autofocus
+                   placeholder="https://">
+        </label>
 
-            <label>
+    <? if ($prefix): ?>
+        <label class="with-prefix">
+            <?= _('Gewünschter Kurzlink') ?> (<?= _('optional') ?>)
+            <span class="prefix-wrapper">
+                <span class="prefix"><?= htmlReady($prefix) ?></span>
                 <input type="text" name="keyword"
-                       pattern="^\w[\w-]+$" placeholder="<?= _('Kurzlink') ?> (<?= _('optional') ?>)">
-            </label>
-        </div>
+                       pattern="^\w[\w-]+$">
+            </span>
+        </label>
+    <? else: ?>
+        <label>
+            <?= _('Gewünschter Kurzlink') ?> (<?= _('optional') ?>)
+            <input type="text" name="keyword"
+                   pattern="^\w[\w-]+$">
+        </label>
+    <? endif; ?>
     </fieldset>
 
     <footer data-dialog-button>

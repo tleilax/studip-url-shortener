@@ -13,6 +13,7 @@ class AdminController extends StudipController
     public function index_action()
     {
         $this->endpoint  = Config::get()->SHORTENER_ENDPOINT;
+        $this->prefix    = Config::get()->SHORTENER_URL_PREFIX;
         $this->signature = Config::get()->SHORTENER_SIGNATURE;
         $this->username  = Config::get()->SHORTENER_USERNAME;
         $this->password  = Config::get()->SHORTENER_PASSWORD;
@@ -25,6 +26,7 @@ class AdminController extends StudipController
         }
 
         Config::get()->store('SHORTENER_ENDPOINT', Request::get('endpoint'));
+        Config::get()->store('SHORTENER_URL_PREFIX', Request::get('prefix'));
         Config::get()->store('SHORTENER_SIGNATURE', Request::get('signature'));
         Config::get()->store('SHORTENER_USERNAME', Request::get('username'));
         Config::get()->store('SHORTENER_PASSWORD', Request::get('password'));

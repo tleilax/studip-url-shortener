@@ -1,12 +1,32 @@
 <form action="<?= $controller->link_for('admin/store') ?>" method="post" class="default">
     <fieldset>
-        <legend><?= _('API Konfiguration') ?></legend>
+        <legend><?= _('Konfiguration') ?></legend>
 
         <label>
-            <?= _('API Endpunkt') ?>
+            <span class="required"><?= _('API Endpunkt') ?></span>
             <input required type="url" name="endpoint"
                    value="<?= htmLReady($endpoint) ?>">
         </label>
+
+        <label>
+            <?= _('Basis-URL des Shorteners') ?>
+            <?= tooltipIcon(
+                _('Wird hier eine URL angegeben, so wird diese als Präfix vor '
+                . 'dem Kurzlink in der Maske zum Erstellen von Links verwendet.')
+            ) ?>
+            <input type="url" name="prefix"
+                   value="<?= htmlReady($prefix) ?>">
+        </label>
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            <?= _('Zugangsdaten') ?>
+            <small style="margin-left: 1ex">
+                <?= _('Es kann entweder eine Signatur oder eine Nutzername/'
+                    . 'Passwort-Kombination angegeben werden.') ?>
+            </small>
+        </legend>
 
         <label>
             <?= _('Signatur') ?>

@@ -34,7 +34,7 @@ class UrlsController extends StudipController
 
     public function add_action()
     {
-
+        $this->prefix = Config::get()->SHORTENER_URL_PREFIX;
     }
 
     public function store_action()

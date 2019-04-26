@@ -31,23 +31,44 @@ form.default {
     }
 
     &.url-add {
-        .loading,
-        .keyword-available,
-        .keyword-unavailable {
-            background-position: right 4px center;
-            background-repeat: no-repeat;
-            background-size: 16px;
-            transition: none;
+        [name="keyword"] {
+            padding-right: 24px;
+
+            &.loading,
+            &.keyword-available,
+            &.keyword-unavailable {
+                background-position: right 4px center;
+                background-repeat: no-repeat;
+                background-size: 16px;
+                transition: none;
+            }
+
+            &.keyword-available {
+                .background-icon('accept', 'status-green');
+            }
+            &.keyword-unavailable {
+                .background-icon('decline', 'status-red');
+            }
+            &.loading {
+                background-image: url("@{image-path}/ajax-indicator-black.svg");
+            }
         }
 
-        .keyword-available {
-            .background-icon('accept', 'status-green');
-        }
-        .keyword-unavailable {
-            .background-icon('decline', 'status-red');
-        }
-        .loading {
-            background-image: url("@{image-path}/ajax-indicator-black.svg");
+        .with-prefix {
+            .prefix-wrapper {
+                display: flex;
+                align-items: stretch;
+                max-width: 48em;
+            }
+            .prefix {
+                background-color: @light-gray-color-40;
+                border: 1px solid @light-gray-color-80;
+                margin-top: 1ex;
+                padding: 5px;
+            }
+            input {
+                border-left: 0;
+            }
         }
     }
 }

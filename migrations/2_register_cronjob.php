@@ -10,7 +10,9 @@ class RegisterCronjob extends Migration
             $task_id,
             null, null, null, null, null,
             CronjobSchedule::PRIORITY_NORMAL,
-            URLShortener\Cronjob::getParameters()
+            array_map(function ($v) {
+                return $v['default'];
+            }, URLShortener\Cronjob::getParameters())
         );
         $schedule->active = true;
         $schedule->store();

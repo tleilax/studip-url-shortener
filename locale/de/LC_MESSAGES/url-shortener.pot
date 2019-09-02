@@ -1,0 +1,134 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the URLShortener package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: URLShortener\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-06-19 11:02+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "URL Shortener"
+msgstr ""
+
+msgid "Übersicht"
+msgstr ""
+
+msgid "Verwaltung"
+msgstr ""
+
+msgid "Wieviele Links sollen pro Aufruf überprüft werden?"
+msgstr ""
+
+msgid "Anzahl der Stunden, nach der ein Link überprüft werden soll"
+msgstr ""
+
+msgid "Link kürzen"
+msgstr ""
+
+#, php-format
+msgid "URL wurde zu %s gekürzt"
+msgstr ""
+
+msgid "URL konnte nicht gekürzt werden"
+msgstr ""
+
+msgid "Unbekannter Fehler"
+msgstr ""
+
+#, php-format
+msgid "Sie haben diese URL bereits zu %s gekürzt"
+msgstr ""
+
+msgid "Die URL wurde gelöscht"
+msgstr ""
+
+msgid "Die Konfiguration wurde gespeichert"
+msgstr ""
+
+msgid "Statistiken"
+msgstr ""
+
+#, php-format
+msgid "Anzahl Links: %s"
+msgstr ""
+
+#, php-format
+msgid "Anzahl Klicks: %s"
+msgstr ""
+
+msgid "Konfiguration"
+msgstr ""
+
+msgid "API Endpunkt"
+msgstr ""
+
+msgid "Basis-URL des Shorteners"
+msgstr ""
+
+msgid ""
+"Wird hier eine URL angegeben, so wird diese als Präfix vor dem Kurzlink in "
+"der Maske zum Erstellen von Links verwendet."
+msgstr ""
+
+msgid "Zugangsdaten"
+msgstr ""
+
+msgid ""
+"Es kann entweder eine Signatur oder eine Nutzername/Passwort-Kombination "
+"angegeben werden."
+msgstr ""
+
+msgid "Signatur"
+msgstr ""
+
+msgid "Nutzername"
+msgstr ""
+
+msgid "Passwort"
+msgstr ""
+
+msgid "Speichern"
+msgstr ""
+
+msgid "Abbrechen"
+msgstr ""
+
+msgid "URL, die gekürzt werden soll"
+msgstr ""
+
+msgid "Gewünschter Kurzlink"
+msgstr ""
+
+msgid "optional"
+msgstr ""
+
+msgid "Sie haben noch keine Links gekürzt."
+msgstr ""
+
+msgid "Gekürzt"
+msgstr ""
+
+msgid "Original"
+msgstr ""
+
+msgid "Klicks"
+msgstr ""
+
+msgid "Stand"
+msgstr ""
+
+msgid "Link löschen"
+msgstr ""
+
+msgid "Wollen Sie diesen Link wirklich löschen?"
+msgstr ""

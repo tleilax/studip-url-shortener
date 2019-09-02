@@ -1,5 +1,5 @@
 <?php
-class UrlsController extends StudipController
+class UrlsController extends URLShortener\Controller
 {
     public function before_filter(&$action, &$args)
     {
@@ -13,7 +13,7 @@ class UrlsController extends StudipController
 
         $actions = Sidebar::get()->addWidget(new ActionsWidget());
         $actions->addLink(
-            _('Link kürzen'),
+            $this->_('Link kürzen'),
             $this->link_for('urls/add'),
             Icon::create('add')
         )->asDialog('size=auto');
@@ -25,6 +25,12 @@ class UrlsController extends StudipController
         $offset = $page * $limit;
 
         $this->count = URLShortener\URL::countBySQL('user_id = ?', [$GLOBALS['user']->id]);
+        if ($offset > $this->count) {
+            $page   = 0;
+            $offset = 0;
+        }
+
+        $this->page  = $page;
         $this->urls  = URLShortener\URL::findBySQL(
             "user_id = ?",
             [$GLOBALS['user']->id],
@@ -57,13 +63,13 @@ class UrlsController extends StudipController
                 $model->store();
 
                 PageLayout::postSuccess(formatLinks(sprintf(
-                    _('URL wurde zu %s gekürzt'),
+                    $this->_('URL wurde zu %s gekürzt'),
                     $model->shorturl
                 )));
             } catch (Exception $e) {
                 PageLayout::postError(
-                    _('URL konnte nicht gekürzt werden'),
-                    [$e->getMessage() ?: _('Unbekannter Fehler')]
+                    $this->_('URL konnte nicht gekürzt werden'),
+                    [$e->getMessage() ?: $this->_('Unbekannter Fehler')]
                 );
             }
         } elseif ($check->user_id !== $GLOBALS['user']->id) {
@@ -75,12 +81,12 @@ class UrlsController extends StudipController
             $model->store();
 
             PageLayout::postSuccess(formatLinks(sprintf(
-                _('URL wurde zu %s gekürzt'),
+                $this->_('URL wurde zu %s gekürzt'),
                 $model->shorturl
             )));
         } else {
             PageLayout::postInfo(formatLinks(sprintf(
-                _('Sie haben diese URL bereits zu %s gekürzt'),
+                $this->_('Sie haben diese URL bereits zu %s gekürzt'),
                 $check->shorturl
             )));
         }
@@ -88,20 +94,19 @@ class UrlsController extends StudipController
         $this->redirect('urls/index');
     }
 
-    public function delete_action($url_id)
+    public function delete_action(URLShortener\URL $url)
     {
         if (!Request::isPost()) {
             throw new MethodNotAllowedException();
         }
 
-        $url = URLShortener\URL::find($url_id);
         if ($url->user_id !== $GLOBALS['user']->id && $GLOBALS['user']->perms !== 'root') {
             throw new AccessDeniedException();
         }
 
         $url->delete();
 
-        PageLayout::postSuccess(_('Die URL wurde gelöscht'));
+        PageLayout::postSuccess($this->_('Die URL wurde gelöscht'));
         $this->redirect('urls/index');
     }
 }

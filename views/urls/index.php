@@ -1,5 +1,5 @@
 <? if ($count === 0): ?>
-    <?= MessageBox::info(_('Sie haben noch keine Links gekürzt.')) ?>
+    <?= MessageBox::info($_('Sie haben noch keine Links gekürzt.')) ?>
 
     <?= $this->render_partial('urls/add.php') ?>
 <? return; endif; ?>
@@ -13,9 +13,9 @@
     </colgroup>
     <thead>
         <tr>
-            <th><?= ('Gekürzt') ?></th>
-            <th><?= _('Original') ?></th>
-            <th><?= _('Klicks') ?></th>
+            <th><?= $_('Gekürzt') ?></th>
+            <th><?= $_('Original') ?></th>
+            <th><?= $_('Klicks') ?></th>
             <th></th>
         </tr>
     </thead>
@@ -32,13 +32,13 @@
                     <?= htmlReady($url->title) ?>
                 </a>
             </td>
-            <td title="<?= _('Stand') . ':' . strftime('%x %X', $url->updated) ?>">
+            <td title="<?= $_('Stand') . ':' . strftime('%x %X', $url->updated) ?>">
                 <?= number_format($url->clicks, 0, ',', '.') ?>
             </td>
             <td class="actions">
-                <form action="<?= $controller->link_for("urls/delete/{$url->id}") ?>" method="post">
-                    <?= Icon::create('trash')->asInput(tooltip2(_('Link löschen')) + [
-                        'data-confirm' => _('Wollen Sie diesen Link wirklich löschen?'),
+                <form action="<?= $controller->delete($url) ?>" method="post">
+                    <?= Icon::create('trash')->asInput(tooltip2($_('Link löschen')) + [
+                        'data-confirm' => $_('Wollen Sie diesen Link wirklich löschen?'),
                     ]) ?>
                 </form>
             </td>
@@ -47,6 +47,16 @@
     </tbody>
 <? if ($count > Config::get()->ENTRIES_PER_PAGE): ?>
     <tfoot>
+        <tr>
+            <td colspan="4" class="actions">
+                <?= $GLOBALS['template_factory']->render('shared/pagechooser.php', [
+                    'num_postings' => $count,
+                    'perPage'      => Config::get()->ENTRIES_PER_PAGE,
+                    'page'         => $page,
+                    'pagelink'     => $controller->indexURL('%u')
+                ]) ?>
+            </td>
+        </tr>
     </tfoot>
 <? endif; ?>
 </table>

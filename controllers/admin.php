@@ -1,5 +1,5 @@
 <?php
-class AdminController extends StudipController
+class AdminController extends URLShortener\Controller
 {
     public function before_filter(&$action, &$args)
     {
@@ -31,7 +31,7 @@ class AdminController extends StudipController
         Config::get()->store('SHORTENER_USERNAME', Request::get('username'));
         Config::get()->store('SHORTENER_PASSWORD', Request::get('password'));
 
-        PageLayout::postSuccess(_('Die Konfiguration wurde gespeichert'));
+        PageLayout::postSuccess($this->_('Die Konfiguration wurde gespeichert'));
 
         $this->redirect('admin');
     }
@@ -53,9 +53,12 @@ class AdminController extends StudipController
         }
 
         $widget = Sidebar::get()->addWidget(new SidebarWidget());
-        $widget->setTitle(_('Statistiken'));
+        $widget->setTitle($this->_('Statistiken'));
         $widget->addElement(new WidgetElement(sprintf(
-            _('Anzahl Links: %s') . '<br>' . _('Anzahl Klicks: %s'),
+            implode('<br>', [
+                $this->_('Anzahl Links: %s'),
+                $this->_('Anzahl Klicks: %s'),
+            ]),
             number_format($data['db-stats']['total_links'], 0, ',', '.'),
             number_format($data['db-stats']['total_clicks'], 0, ',', '.')
         )));

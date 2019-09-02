@@ -1,11 +1,11 @@
 <?php
-class URLShortener extends StudIPPlugin implements SystemPlugin, RESTAPIPlugin
+require_once __DIR__ . '/bootstrap.php';
+
+class URLShortener extends URLShortener\Plugin implements SystemPlugin, RESTAPIPlugin, PrivacyPlugin
 {
     public function __construct()
     {
         parent::__construct();
-
-        StudipAutoloader::addAutoloadPath(__DIR__ . '/lib', 'URLShortener\\');
 
         if (!$this->userIsLoggedIn()) {
             return;
@@ -18,16 +18,16 @@ class URLShortener extends StudIPPlugin implements SystemPlugin, RESTAPIPlugin
         self::configureAPI();
 
         $navigation = new Navigation(
-            _('URL Shortener'),
+            $this->_('URL Shortener'),
             PluginEngine::getURL($this, [], 'urls')
         );
         if ($this->userIsRoot()) {
             $navigation->addSubnavigation('urls', new Navigation(
-                _('Übersicht'),
+                $this->_('Übersicht'),
                 PluginEngine::getURL($this, [], 'urls')
             ));
             $navigation->addSubnavigation('admin', new Navigation(
-                _('Verwaltung'),
+                $this->_('Verwaltung'),
                 PluginEngine::getURL($this, [], 'admin')
             ));
 
@@ -36,6 +36,8 @@ class URLShortener extends StudIPPlugin implements SystemPlugin, RESTAPIPlugin
             }
         }
         Navigation::addItem('/tools/url-shortener', $navigation);
+
+        Notificationcenter::addObserver($this, 'removeUserData', 'UserDataDidRemove');
     }
 
     public static function isConfigured()
@@ -89,10 +91,30 @@ class URLShortener extends StudIPPlugin implements SystemPlugin, RESTAPIPlugin
         parent::perform($unconsumed);
     }
 
+    ## RESTAPIPlugin
+
     public function getRouteMaps()
     {
         return [
             new URLShortener\RouteMap(),
         ];
+    }
+
+    ## PrivacyPlugin
+
+    public function removeUserData($event, $user_id, $type)
+    {
+        URLShortener\URL::deleteByUser_id($user_id);
+    }
+
+    public function exportUserData(StoredUserData $storage)
+    {
+        $storage->addTabularData('URL Shortener: Gekürzte URLs', 'shorturls', URLShortener\URL::findAndMapBySQL(
+            function ($url) {
+                return $url->toRawArray();
+            },
+            'user_id = ?',
+            [$storage->user_id]
+        ));
     }
 }

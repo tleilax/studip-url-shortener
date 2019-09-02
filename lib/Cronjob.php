@@ -25,7 +25,7 @@ class Cronjob extends GlobalCronjob
                 'type'        => 'integer',
                 'default'     => 50,
                 'status'      => 'mandatory',
-                'description' => _('Wieviele Links sollen Aufruf überprüft werden?'),
+                'description' => _('Wieviele Links sollen pro Aufruf überprüft werden?'),
             ],
             'refresh_rate' => [
                 'type'        => 'integer',
